@@ -11,6 +11,9 @@ const BookForm = ({
   error,
   success,
   addBook,
+  editable,
+  setEditable,
+  handleUpdate
 }) => {
   const handleSubmit = (ev) => {
     ev.preventDefault();
@@ -19,7 +22,7 @@ const BookForm = ({
       return alert("All fields are mandatory")
     }
 
-    addBook({title, author, status})
+    !editable ? addBook({title, author, status}) : handleUpdate();
   };
 
   return (
@@ -73,7 +76,7 @@ const BookForm = ({
       </Row>
 
       <Button variant="primary" type="submit">
-        Add New Book
+       {!editable ? "Add New Book" : "Update Book"}
       </Button>
     </Form>
   );
