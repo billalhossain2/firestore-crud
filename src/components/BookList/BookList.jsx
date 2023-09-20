@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Table } from 'react-bootstrap'
 import BookItem from '../BookItem/BookItem'
 
-const BookList = () => {
+const BookList = ({books, deleteBook}) => {
   return (
     <Table className='mt-5 w-50 mx-auto'>
         <thead>
@@ -14,9 +14,9 @@ const BookList = () => {
         </tr>
       </thead>
       <tbody>
-        <BookItem></BookItem>
-        <BookItem></BookItem>
-        <BookItem></BookItem>
+        {
+          books.map(book => <BookItem key={book.id} book={book} deleteBook={deleteBook}></BookItem>)
+        }
       </tbody>
     </Table>
   )

@@ -1,13 +1,14 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-const BookItem = () => {
+const BookItem = ({book, deleteBook}) => {
+  const {id, title, author, status} = book;
   return (
     <tr>
-      <td>Introduction to JavaScript</td>
-      <td>Siam Ahmed</td>
-      <td>Not Available</td>
+      <td>{title}</td>
+      <td>{author}</td>
+      <td>{status}</td>
       <td>
-        <Button className="me-1" variant="danger">
+        <Button onClick={()=>deleteBook(id)} className="me-1" variant="danger">
           Delete
         </Button>
         <Button variant="success">Edit</Button>
