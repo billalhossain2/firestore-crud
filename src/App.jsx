@@ -1,31 +1,26 @@
 import BookForm from "./components/Form/BookForm";
 import BookList from "./components/BookList/BookList";
-import app from "./firebase/firebase.config";
-import { getFirestore } from "firebase/firestore";
-const db = getFirestore(app);
-import {
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  doc,
-  updateDoc,
-  setDoc,
-} from "firebase/firestore";
+import BookServices from "./services/Book.Services";
+
 import { useEffect, useState } from "react";
+
+
 function App() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [status, setStatus] = useState("");
+
+
   const [editable, setEditable] = useState(null);
   const [books, setBooks] = useState([]);
+
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   const addBook = async (newBook) => {
     try {
-      const docRef = await addDoc(collection(db, "books"), newBook);
-      console.log("Document written with ID: ", docRef.id);
+      const docRef = await BookServices.addNewBook(newBook);
       setSuccess("Added a new book successfully");
       getAllBooks();
 
@@ -34,24 +29,19 @@ function App() {
       setAuthor("");
       setStatus("");
     } catch (e) {
-      console.error("Error adding document: ", e);
       setError("Book Adding Error ", e.message);
     }
   };
 
   const getAllBooks = async () => {
-    const querySnapshot = await getDocs(collection(db, "books"));
-    const allBooks = [];
-    querySnapshot.forEach((doc) =>
-      allBooks.push({ id: doc.id, ...doc.data() })
-    );
-    setBooks([...allBooks]);
+    const data = await BookServices.getAllBooks();
+    setBooks(data.docs.map(doc => ({id:doc.id, ...doc.data()})))
   };
 
   useEffect(() => getAllBooks, []);
 
   const deleteBook = async (bookId) => {
-    await deleteDoc(doc(db, "books", bookId));
+    await BookServices.deleteBook(bookId)
     //refetch
     getAllBooks();
   };
@@ -72,7 +62,7 @@ function App() {
       status
     }
     //update document
-    await setDoc(doc(db, 'books', updateId), updatedData)
+    await BookServices.updateBook(updateId, updatedData)
 
     //reset form
     setTitle("");
